@@ -4,9 +4,95 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Go Cart</title>
+    <link rel="preload" href="style.css" as="style" onload="this.onload=null;this.rel='stylesheet'">
+    <noscript><link rel="stylesheet" href="style.css"></noscript>
 </head>
+
 <body>
-    <h1>welcome to Go Cart</h1>
-    
+    <header class="navbar" role="banner">
+        <a class="brand" href="#">
+            <span class="logo" aria-hidden="true">GC</span>
+            <span>Go Cart</span>
+        </a>
+            
+        <button class="nav-toggle" aria-expanded="false" aria-controls="primary-navigation" id="navToggle" title="Toggle menu">
+            ☰
+        </button>
+
+       
+
+        <nav id="primary-navigation" class="nav-links" role="navigation" aria-label="Primary Navigation">
+            <a href="#" aria-current="page">Home</a>
+            <a href="#">Shop</a>
+            <a href="#">Deals</a>
+            <a href="#">About</a>
+            <a href="#">Contact</a>
+        </nav>
+
+        <div class="actions" aria-hidden="false">
+            <a class="btn" href="#">Sign in</a>
+            <a class="btn" href="#" aria-label="Cart">
+                Cart <span class="cart-badge" aria-hidden="true">3</span>
+            </a>
+        </div>
+    </header>
+
+    <!-- Replace/add sidebar so items contain an icon and a label -->
+	
+
+    <main class="content">
+        <h1>welcome to Go Cart</h1>
+        <p>This is just the beginning.</p>
+    </main>
+
+    <script>
+        // Simple mobile toggle + sidebar toggle
+		(function(){
+			const toggle = document.getElementById('navToggle');
+			const nav = document.getElementById('primary-navigation');
+			toggle.addEventListener('click', ()=> {
+				const isOpen = nav.classList.toggle('open');
+				toggle.setAttribute('aria-expanded', String(isOpen));
+			});
+
+			// Sidebar toggle
+			const sidebarToggle = document.getElementById('sidebarToggle');
+			const sidebar = document.getElementById('site-sidebar');
+			const content = document.querySelector('.content');
+
+			// start collapsed
+			sidebar.classList.remove('expanded');
+			sidebar.classList.add('collapsed');
+			sidebar.setAttribute('aria-expanded','false');
+
+			sidebarToggle.addEventListener('click', ()=> {
+				const isExpanded = sidebar.classList.toggle('expanded');
+				sidebar.classList.toggle('collapsed', !isExpanded);
+				sidebar.setAttribute('aria-expanded', String(isExpanded));
+				sidebarToggle.setAttribute('aria-expanded', String(isExpanded));
+				// push content when fully expanded on wide screens
+				if (window.innerWidth > 900) {
+					content.classList.toggle('shift', isExpanded);
+				}
+			});
+
+			// on resize, keep content shift consistent
+			window.addEventListener('resize', ()=> {
+				if (window.innerWidth <= 900) content.classList.remove('shift');
+				else if (sidebar.classList.contains('expanded')) content.classList.add('shift');
+			});
+			
+			// optional: close expanded when Escape pressed
+			document.addEventListener('keydown', (e)=> {
+				if (e.key === 'Escape' && sidebar.classList.contains('expanded')) {
+					sidebar.classList.remove('expanded');
+					sidebar.classList.add('collapsed');
+					sidebar.setAttribute('aria-expanded','false');
+					sidebarToggle.setAttribute('aria-expanded','false');
+					content.classList.remove('shift');
+				}
+			});
+		})();
+    </script>
 </body>
 </html>
